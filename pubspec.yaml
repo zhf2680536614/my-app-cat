@@ -15,7 +15,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  # 阿里巴巴普惠体VF字体 用于全局字体
+  # flutter官方图标字体
   cupertino_icons: ^1.0.8
   # JSON 序列化库
   json_annotation: ^4.8.1
