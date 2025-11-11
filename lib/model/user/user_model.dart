@@ -12,6 +12,7 @@ class UserModel {
   final int age;
   final String? email; // 可选字段
   final String? phone; // 可选字段
+  final String? address; // 可选字段
 
   UserModel({
     required this.id,
@@ -19,6 +20,7 @@ class UserModel {
     required this.age,
     this.email,
     this.phone,
+    this.address,
   });
 
   // 从 JSON 数据创建实例
