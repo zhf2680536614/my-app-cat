@@ -26,13 +26,13 @@ dependencies:
   # 状态管理库
   get: ^4.6.5  # 添加此行（版本号可使用最新稳定版）
   # 弹窗库
-  fluttertoast: ^8.2.2  # 添加此行（版本号可使用最新稳定版）
+  fluttertoast: ^9.0.0  # 添加此行（版本号可使用最新稳定版）
   # HTTP 请求库
   dio: ^5.4.3  # 添加此行（版本号可使用最新稳定版）
   # 日志库
   logger: ^2.0.2  # 添加此行（版本号可使用最新稳定版）
   # 动画库
-  lottie: ^2.7.0  # 添加此行（版本号可使用最新稳定版）
+  lottie: ^3.3.2  # 添加此行（版本号可使用最新稳定版）
   # 缓存网络图片库
   cached_network_image: ^3.3.0  # 添加此行（版本号可使用最新稳定版）
   # 图片查看库
@@ -42,7 +42,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   # 代码检查工具
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   # 代码生成工具
   build_runner: ^2.4.4
   # JSON 序列化库 与 json_annotation 配合使用
