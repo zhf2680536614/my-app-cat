@@ -12,7 +12,7 @@ class _AiState extends State<Ai> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(child: Text("AI")),
+      body: Center(child: Text("AI 模块")),
     );
   }
 }
