@@ -5,8 +5,6 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-// 移除有问题的配置
-
 android {
     namespace = "com.example.my_app_cat"
     compileSdk = flutter.compileSdkVersion
@@ -31,8 +29,6 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
-
-    // 移除签名配置，使用默认签名
 
     buildTypes {
         debug {
