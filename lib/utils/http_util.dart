@@ -1,7 +1,7 @@
 // 网络请求工具类（Dio封装）
 import 'package:dio/dio.dart';
 import 'package:my_app_cat/config/service/base_url.dart' show apiDevBaseUrl;
-import 'package:my_app_cat/utils/flutter_toast.dart';
+import 'package:my_app_cat/utils/flutter_toast_util.dart';
 import 'package:my_app_cat/utils/log_util.dart' show LogUtil;
 
 class HttpUtil {

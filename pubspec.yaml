@@ -22,21 +22,23 @@ dependencies:
   # SVG 图片支持
   flutter_svg: ^2.0.9
   # 屏幕适配库
-  flutter_screenutil: ^5.9.0  # 添加此行（版本号可使用最新稳定版）
+  flutter_screenutil: ^5.9.0
   # 状态管理库
-  get: ^4.6.5  # 添加此行（版本号可使用最新稳定版）
+  get: ^4.6.5
   # 弹窗库
-  fluttertoast: ^9.0.0  # 添加此行（版本号可使用最新稳定版）
+  fluttertoast: ^9.0.0
   # HTTP 请求库
-  dio: ^5.4.3  # 添加此行（版本号可使用最新稳定版）
+  dio: ^5.4.3
   # 日志库
-  logger: ^2.0.2  # 添加此行（版本号可使用最新稳定版）
+  logger: ^2.0.2
   # 动画库
-  lottie: ^3.3.2  # 添加此行（版本号可使用最新稳定版）
+  lottie: ^3.3.2
   # 缓存网络图片库
-  cached_network_image: ^3.3.0  # 添加此行（版本号可使用最新稳定版）
+  cached_network_image: ^3.3.0
   # 图片查看库
-  photo_view: ^0.15.0  # 添加此行（版本号可使用最新稳定版）
+  photo_view: ^0.15.0
+  # 权限管理插件
+  permission_handler: ^11.0.1
 
 dev_dependencies:
   flutter_test:

@@ -5,6 +5,8 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// 移除有问题的配置
+
 android {
     namespace = "com.example.my_app_cat"
     compileSdk = flutter.compileSdkVersion
@@ -30,11 +32,14 @@ android {
         versionName = flutter.versionName
     }
 
+    // 移除签名配置，使用默认签名
+
     buildTypes {
+        debug {
+            // 使用默认签名
+        }
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            // 移除签名配置，使用默认无签名构建
         }
     }
 }

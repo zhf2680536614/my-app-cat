@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// 页面缓存工具
+// 页面缓存组件
 class KeepAliveWrapper extends StatefulWidget {
   final Widget child;
 

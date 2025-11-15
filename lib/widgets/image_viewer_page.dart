@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+// 图片查看器组件
 class ImageViewerPage extends StatefulWidget {
   final List<String> imageUrls; // 图片URL集合
   final int initialIndex; // 初始显示的图片索引

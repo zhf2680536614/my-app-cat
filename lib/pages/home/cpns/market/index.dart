@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:my_app_cat/utils/flutter_toast.dart';
+import 'package:my_app_cat/utils/flutter_toast_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_app_cat/api/test/test_api.dart';
 import 'package:my_app_cat/model/user/user_model.dart';

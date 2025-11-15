@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   //定义默认展示的页面索引
   int _currentIndex = 0;
+
   //定义首页展示的页面集合
   final List<Widget> _pages = [
     const Search(),
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
     const Information(),
     const Person(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +43,12 @@ class _HomePageState extends State<HomePage> {
           margin: EdgeInsets.only(top: 0.h),
           padding: EdgeInsets.all(12.sp),
           decoration: BoxDecoration(
-            color: Color.fromRGBO(254, 182, 120, 0.8),
+            color: Color.fromRGBO(255, 227, 205, 1.0),
             shape: BoxShape.circle,
+            border: Border.all(
+              width: 1.sp,
+              color: Color.fromRGBO(255, 120, 0, 1.0),
+            ),
           ),
           child: SvgPicture.asset(
             'assets/home/bottom/baimao.svg',
@@ -70,28 +76,41 @@ class _HomePageState extends State<HomePage> {
           },
 
           // 外观样式属性
-          type: BottomNavigationBarType.fixed, // 两种类型：fixed（固定）或shifting（浮动效果）
-          backgroundColor: const Color.fromARGB(255, 255, 248, 248), // 导航栏背景色
-          elevation: 0, // 阴影高度，设置为0可移除阴影
+          type: BottomNavigationBarType.fixed,
+          // 两种类型：fixed（固定）或shifting（浮动效果）
+          backgroundColor: const Color.fromARGB(255, 255, 248, 248),
+          // 导航栏背景色
+          elevation: 0,
+          // 阴影高度，设置为0可移除阴影
           // 颜色相关属性
-          selectedItemColor: Color.fromRGBO(255, 119, 0, 1), // 选中项颜色
-          unselectedItemColor: Color.fromRGBO(0, 0, 0, 1), // 未选中项颜色
+          selectedItemColor: Color.fromRGBO(255, 119, 0, 1),
+          // 选中项颜色
+          unselectedItemColor: Color.fromRGBO(0, 0, 0, 1),
+          // 未选中项颜色
           // 文本标签相关属性
-          showSelectedLabels: true, // 是否显示选中项标签
-          showUnselectedLabels: true, // 是否显示未选中项标签
-          selectedFontSize: 12.sp, // 选中项字体大小
-          unselectedFontSize: 12.sp, // 未选中项字体大小
+          showSelectedLabels: true,
+          // 是否显示选中项标签
+          showUnselectedLabels: true,
+          // 是否显示未选中项标签
+          selectedFontSize: 12.sp,
+          // 选中项字体大小
+          unselectedFontSize: 12.sp,
+          // 未选中项字体大小
           selectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.w900,
             fontFamily: 'AlimamaFangYuanTiVF',
-          ), // 选中项文本样式
+          ),
+          // 选中项文本样式
           unselectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.w900,
             fontFamily: 'AlimamaFangYuanTiVF',
-          ), // 未选中项文本样式
+          ),
+          // 未选中项文本样式
           // 图标相关属性
-          selectedIconTheme: const IconThemeData(size: 20), // 选中项图标主题
-          unselectedIconTheme: const IconThemeData(size: 20), // 未选中项图标主题
+          selectedIconTheme: const IconThemeData(size: 20),
+          // 选中项图标主题
+          unselectedIconTheme: const IconThemeData(size: 20),
+          // 未选中项图标主题
           // 横屏布局选项（当屏幕横屏时的布局方式）
           landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
 
@@ -132,8 +151,8 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
               icon: SizedBox(width: 24.w, height: 24.h),
               activeIcon: SizedBox(width: 24.w, height: 24.h),
-              label: 'AI',
-              tooltip: 'AI',
+              label: '发布',
+              tooltip: '发布',
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
