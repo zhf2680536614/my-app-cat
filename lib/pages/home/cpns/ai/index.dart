@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app_cat/utils/log_util.dart';
 import 'package:my_app_cat/utils/permission_util.dart';
 
 class Ai extends StatefulWidget {
@@ -27,12 +28,20 @@ class _AiState extends State<Ai> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  // 标记是否是首次进入页面时的生命周期回调
+  bool _isFirstLifecycleCall = true;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     // 当应用从后台恢复到前台时（例如从设置页面返回）
     if (state == AppLifecycleState.resumed) {
-      // 重新请求权限，确保"本次使用时允许"的权限会重新弹出
+      // 跳过首次生命周期回调，避免重复请求权限
+      if (_isFirstLifecycleCall) {
+        _isFirstLifecycleCall = false;
+        return;
+      }
+
       _requestPermission();
     }
   }
@@ -40,18 +49,21 @@ class _AiState extends State<Ai> with WidgetsBindingObserver {
   // 请求权限的方法
   Future<void> _requestPermission() async {
     if (!mounted) return;
-    
+
     // 调用修改后的requestLocationPermission方法
     // 该方法现在会：
     // 1. 只对"始终允许"的权限直接返回true
     // 2. 对"本次使用时允许"和其他情况重新请求权限
     // 3. 对"禁止且不再询问"的情况显示设置跳转提示
     bool granted = await PermissionUtil.requestLocationPermission(context);
-    
+
     // 更新UI状态
-    setState(() {
-      _isGranted = granted;
-    });
+    if (granted) {
+      LogUtil.d('位置权限已授权');
+      setState(() {
+        _isGranted = granted;
+      });
+    }
   }
 
   @override

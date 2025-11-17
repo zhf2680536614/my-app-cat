@@ -76,9 +76,6 @@ class PermissionUtil {
         return true;
       } else if (permissionStatus.isPermanentlyDenied) {
         LogUtil.d('用户拒绝位置权限并不再询问');
-        if (context.mounted) {
-          await handlePermanentlyDeniedPermission(context, '位置权限');
-        }
         return false;
       } else {
         LogUtil.d('用户拒绝了位置权限');
