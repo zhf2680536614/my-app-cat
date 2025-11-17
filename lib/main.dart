@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
-import 'package:my_app_cat/router/router.dart' show routes;
+import 'package:cat/router/router.dart' show routes; 
 
 void main() async {
   // 确保Flutter绑定已初始化

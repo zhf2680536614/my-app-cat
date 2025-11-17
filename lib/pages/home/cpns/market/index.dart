@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:my_app_cat/utils/flutter_toast_util.dart';
+import 'package:cat/utils/flutter_toast_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:my_app_cat/api/test/test_api.dart';
-import 'package:my_app_cat/model/user/user_model.dart';
-import 'package:my_app_cat/utils/log_util.dart';
+import 'package:cat/api/test/test_api.dart';
+import 'package:cat/model/user/user_model.dart';
+import 'package:cat/utils/log_util.dart';
 
 class Market extends StatefulWidget {
   const Market({super.key});

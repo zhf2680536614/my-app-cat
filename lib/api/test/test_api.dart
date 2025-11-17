@@ -1,5 +1,5 @@
-import 'package:my_app_cat/utils/http_util.dart';
-import 'package:my_app_cat/model/user/user_model.dart';
+import 'package:cat/utils/http_util.dart';
+import 'package:cat/model/user/user_model.dart';
 
 class TestApi {
   Future<UserModel> testService() async {

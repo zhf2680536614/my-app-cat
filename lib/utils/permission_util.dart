@@ -2,7 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:my_app_cat/utils/flutter_toast_util.dart'; // 引入您已有的toast工具类
+import 'package:cat/utils/flutter_toast_util.dart'; // 引入您已有的toast工具类
 import 'log_util.dart'; // 引入日志工具类
 
 /// 权限管理工具类

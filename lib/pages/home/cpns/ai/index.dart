@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_app_cat/utils/log_util.dart';
-import 'package:my_app_cat/utils/permission_util.dart';
+import 'package:cat/utils/log_util.dart';
+import 'package:cat/utils/permission_util.dart';
 
 class Ai extends StatefulWidget {
   const Ai({super.key});

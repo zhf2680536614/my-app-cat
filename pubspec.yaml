@@ -1,14 +1,19 @@
-name: my_app_cat
-description: "my-app-cat"
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
+# 项目名称
+name: cat
+# 项目描述
+description: "cat"
+
+# 项目发布到 pub.dev 的配置
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
+# 项目版本号
 version: 1.0.0+1
 
+# 项目依赖环境
 environment:
   sdk: ^3.9.2
 
+# 项目依赖库
 dependencies:
   flutter:
     sdk: flutter
