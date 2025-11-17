@@ -7,56 +7,111 @@ import 'log_util.dart'; // 引入日志工具类
 
 /// 权限管理工具类
 class PermissionUtil {
+  /// 权限请求状态标志，用于防止并发请求
+  static bool _isLocationPermissionRequesting = false;
+
   /// 请求位置权限
-  static Future<bool> requestLocationPermission() async {
+  static Future<bool> requestLocationPermission(BuildContext context) async {
+    // 检查是否已有权限请求正在进行中
+    if (_isLocationPermissionRequesting) {
+      LogUtil.d('已有位置权限请求正在进行中，跳过此次请求');
+      return false;
+    }
+
     try {
+      // 设置请求状态为进行中
+      _isLocationPermissionRequesting = true;
+
       // 检查位置权限状态
       var status = await Permission.location.status;
       LogUtil.d('当前位置权限状态: $status');
 
-      // 如果权限已授予，直接返回true
-      if (status.isGranted) {
+      // 情况1：权限被永久拒绝
+      if (status.isPermanentlyDenied) {
+        LogUtil.d('位置权限被永久拒绝，显示设置跳转提示');
+        if (context.mounted) {
+          await handlePermanentlyDeniedPermission(context, '位置权限');
+        }
+        return false;
+      }
+
+      // 情况2：检查是否为"始终允许"权限（在Android上是Permission.locationAlways，在iOS上是特定状态）
+      bool isAlwaysGranted = false;
+      
+      // Android平台的始终允许权限检查
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        var alwaysStatus = await Permission.locationAlways.status;
+        isAlwaysGranted = alwaysStatus.isGranted;
+        LogUtil.d('Android平台始终允许权限状态: $isAlwaysGranted');
+      }
+      // iOS平台的检查，需要通过status的具体值来判断
+      else if (defaultTargetPlatform == TargetPlatform.iOS) {
+        // 对于iOS，我们需要检查更具体的状态
+        // 注意：这里简化处理，实际可能需要根据具体版本调整
+        isAlwaysGranted = status == PermissionStatus.granted && 
+                         await Permission.locationWhenInUse.status.isGranted &&
+                         await Permission.locationAlways.status.isGranted;
+        LogUtil.d('iOS平台始终允许权限状态: $isAlwaysGranted');
+      }
+
+      // 如果是始终允许权限，直接返回true
+      if (isAlwaysGranted) {
+        LogUtil.d('位置权限已设置为始终允许，直接使用');
         return true;
       }
 
-      // 如果权限被永久拒绝，提示用户去设置页面开启
-      if (status.isPermanentlyDenied || status.isDenied) {
-        // 显示提示信息
-        FlutterToastUtils.showToast('位置权限被拒绝，请在设置中开启');
+      // 情况3：其他情况（包括临时拒绝、首次请求或"本次使用时允许"后重新打开应用）
+      // 检查系统是否允许再次显示权限请求弹窗
+      bool shouldShowRationale = await Permission.location.shouldShowRequestRationale;
+      LogUtil.d('是否应该显示权限说明: $shouldShowRationale');
 
-        // 对于被永久拒绝的情况，引导用户去设置
-        if (status.isPermanentlyDenied) {
-          // 打开应用设置页面
-          await openAppSettings();
+      // 对于"本次使用时允许"后重新打开应用的情况，即使status.isGranted为true，也需要重新请求权限
+      // 所以这里直接请求权限，不检查status.isGranted
+      PermissionStatus permissionStatus = await Permission.location.request();
+      LogUtil.d('位置权限请求结果: $permissionStatus');
+
+      // 根据请求结果返回相应的值
+      if (permissionStatus.isGranted) {
+        LogUtil.d('用户授予了位置权限');
+        return true;
+      } else if (permissionStatus.isPermanentlyDenied) {
+        LogUtil.d('用户拒绝位置权限并不再询问');
+        if (context.mounted) {
+          await handlePermanentlyDeniedPermission(context, '位置权限');
         }
-
-        // 请求权限
-        PermissionStatus permissionStatus = await Permission.location.request();
-        LogUtil.d('位置权限请求结果: $permissionStatus');
-
-        // 根据请求结果返回相应的值
-        if (permissionStatus.isGranted) {
-          return true;
-        } else {
-          // 如果用户拒绝了权限，可以提示用户权限的必要性
-          FlutterToastUtils.showToast('需要位置权限才能获取您的位置信息');
-          return false;
-        }
+        return false;
+      } else {
+        LogUtil.d('用户拒绝了位置权限');
+        // 如果用户拒绝了权限，可以提示用户权限的必要性
+        FlutterToastUtils.showToast('需要位置权限才能获取您的位置信息');
+        return false;
       }
-
-      return false;
     } catch (e) {
       LogUtil.e('请求位置权限出错: $e');
       FlutterToastUtils.showErrorToast('请求位置权限失败');
       return false;
+    } finally {
+      // 无论如何，最后都要重置请求状态
+      _isLocationPermissionRequesting = false;
     }
   }
 
   /// 请求位置权限（包含后台位置）
-  static Future<bool> requestLocationPermissionWithBackground() async {
+  static Future<bool> requestLocationPermissionWithBackground(
+    BuildContext context,
+  ) async {
+    // 检查是否已有权限请求正在进行中
+    if (_isLocationPermissionRequesting) {
+      LogUtil.d('已有位置权限请求正在进行中，跳过后台权限请求');
+      return false;
+    }
+
     try {
+      // 设置请求状态为进行中
+      _isLocationPermissionRequesting = true;
+
       // 先请求前台位置权限
-      bool foregroundGranted = await requestLocationPermission();
+      bool foregroundGranted = await requestLocationPermission(context);
 
       if (!foregroundGranted) {
         return false;
@@ -89,36 +144,10 @@ class PermissionUtil {
       LogUtil.e('请求后台位置权限出错: $e');
       FlutterToastUtils.showErrorToast('请求后台位置权限失败');
       return false;
+    } finally {
+      // 无论如何，最后都要重置请求状态
+      _isLocationPermissionRequesting = false;
     }
-  }
-
-  /// 检查并请求多个权限
-  static Future<Map<Permission, PermissionStatus>> requestMultiplePermissions(
-    List<Permission> permissions,
-  ) async {
-    try {
-      LogUtil.d('开始请求多个权限: $permissions');
-      final Map<Permission, PermissionStatus> statuses = await permissions
-          .request();
-
-      // 记录每个权限的请求结果
-      statuses.forEach((permission, status) {
-        LogUtil.d('权限 $permission 请求结果: $status');
-      });
-
-      return statuses;
-    } catch (e) {
-      LogUtil.e('请求多个权限出错: $e');
-      FlutterToastUtils.showErrorToast('请求权限失败');
-      return {};
-    }
-  }
-
-  /// 检查多个权限是否都已授予
-  static bool areAllPermissionsGranted(
-    Map<Permission, PermissionStatus> statuses,
-  ) {
-    return statuses.values.every((status) => status.isGranted);
   }
 
   /// 请求相机权限
@@ -134,7 +163,15 @@ class PermissionUtil {
       if (status.isPermanentlyDenied || status.isDenied) {
         if (status.isPermanentlyDenied) {
           FlutterToastUtils.showToast('相机权限被拒绝，请在设置中开启');
-          await openAppSettings();
+          try {
+            LogUtil.d('正在打开应用设置页面...');
+            await openAppSettings();
+            // 添加短暂延迟，确保设置页面有足够时间打开
+            await Future.delayed(Duration(milliseconds: 500));
+          } catch (e) {
+            LogUtil.e('打开设置页面失败: $e');
+            FlutterToastUtils.showErrorToast('无法打开设置页面，请手动前往设置');
+          }
         }
 
         PermissionStatus permissionStatus = await Permission.camera.request();
@@ -178,7 +215,15 @@ class PermissionUtil {
       if (status.isPermanentlyDenied || status.isDenied) {
         if (status.isPermanentlyDenied) {
           FlutterToastUtils.showToast('相册权限被拒绝，请在设置中开启');
-          await openAppSettings();
+          try {
+            LogUtil.d('正在打开应用设置页面...');
+            await openAppSettings();
+            // 添加短暂延迟，确保设置页面有足够时间打开
+            await Future.delayed(Duration(milliseconds: 500));
+          } catch (e) {
+            LogUtil.e('打开设置页面失败: $e');
+            FlutterToastUtils.showErrorToast('无法打开设置页面，请手动前往设置');
+          }
         }
 
         PermissionStatus permissionStatus = await permission.request();
@@ -227,7 +272,15 @@ class PermissionUtil {
       if (status.isPermanentlyDenied || status.isDenied) {
         if (status.isPermanentlyDenied) {
           FlutterToastUtils.showToast('存储权限被拒绝，请在设置中开启');
-          await openAppSettings();
+          try {
+            LogUtil.d('正在打开应用设置页面...');
+            await openAppSettings();
+            // 添加短暂延迟，确保设置页面有足够时间打开
+            await Future.delayed(Duration(milliseconds: 500));
+          } catch (e) {
+            LogUtil.e('打开设置页面失败: $e');
+            FlutterToastUtils.showErrorToast('无法打开设置页面，请手动前往设置');
+          }
         }
 
         PermissionStatus permissionStatus = await permission.request();
@@ -249,37 +302,36 @@ class PermissionUtil {
     }
   }
 
-  /// 显示权限被拒绝的弹窗提示
-  static void showPermissionDeniedDialog(
+  /// 检查权限是否被永久禁用，如果是则弹出确认对话框
+  static Future<void> handlePermanentlyDeniedPermission(
     BuildContext context,
     String permissionName,
-  ) {
+  ) async {
     try {
-      LogUtil.d('显示$permissionName权限被拒绝的弹窗');
-      showDialog(
+      // 弹出确认对话框
+      if (!context.mounted) return;
+      showDialog<bool>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: Text('权限申请'),
-          content: Text('需要$permissionName权限才能继续使用此功能，请在设置中开启。'),
+          title: Text('权限被永久禁用'),
+          content: Text('$permissionName已被永久禁用，需要前往设置页面开启才能继续使用此功能。'),
           actions: <Widget>[
             TextButton(
               child: Text('取消'),
               onPressed: () {
-                LogUtil.d('用户取消了权限设置');
+                LogUtil.d('用户取消跳转到设置页面');
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
               child: Text('去设置'),
               onPressed: () async {
-                LogUtil.d('用户选择去设置页面');
-                Navigator.of(context).pop();
-                try {
-                  await openAppSettings();
-                  LogUtil.d('已打开应用设置页面');
-                } catch (e) {
-                  LogUtil.e('打开设置页面失败: $e');
-                  FlutterToastUtils.showErrorToast('无法打开设置页面');
+                LogUtil.d('用户确认跳转到设置页面');
+                await openAppSettings();
+                // 添加短暂延迟，确保设置页面有足够时间打开
+                await Future.delayed(Duration(milliseconds: 1500));
+                if (context.mounted) {
+                  Navigator.of(context).pop();
                 }
               },
             ),
@@ -287,8 +339,8 @@ class PermissionUtil {
         ),
       );
     } catch (e) {
-      LogUtil.e('显示权限弹窗出错: $e');
-      FlutterToastUtils.showErrorToast('显示权限提示失败');
+      LogUtil.e('处理永久禁用权限出错: $e');
+      FlutterToastUtils.showErrorToast('检查权限状态失败');
     }
   }
 }

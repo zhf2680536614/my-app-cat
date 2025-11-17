@@ -18,14 +18,33 @@ class _HomePageState extends State<HomePage> {
   //定义默认展示的页面索引
   int _currentIndex = 0;
 
-  //定义首页展示的页面集合
-  final List<Widget> _pages = [
-    const Search(),
-    const Market(),
-    const Ai(),
-    const Information(),
-    const Person(),
-  ];
+  //存储已初始化的页面，实现懒加载
+  final Map<int, Widget> _initializedPages = {};
+
+  // 获取页面的懒加载方法
+  Widget _getPage(int index) {
+    if (!_initializedPages.containsKey(index)) {
+      // 只在需要时初始化页面
+      switch (index) {
+        case 0:
+          _initializedPages[index] = const Search();
+          break;
+        case 1:
+          _initializedPages[index] = const Market();
+          break;
+        case 2:
+          _initializedPages[index] = const Ai();
+          break;
+        case 3:
+          _initializedPages[index] = const Information();
+          break;
+        case 4:
+          _initializedPages[index] = const Person();
+          break;
+      }
+    }
+    return _initializedPages[index]!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +76,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: IndexedStack(index: _currentIndex, children: _pages),
+      // 使用懒加载方式，只加载当前页面，避免不必要的权限请求
+      body: _getPage(_currentIndex),
       bottomNavigationBar: Theme(
         // 禁用水波纹效果，同时继承全局字体设置
         data: ThemeData(

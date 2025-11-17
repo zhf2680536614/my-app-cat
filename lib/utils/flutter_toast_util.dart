@@ -32,7 +32,7 @@ class FlutterToastUtils {
   static void showToast(String msg) {
     Fluttertoast.showToast(
       msg: msg,
-      toastLength: Toast.LENGTH_SHORT,
+      toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.TOP,
       backgroundColor: const Color.fromRGBO(251, 175, 94, 1),
       textColor: const Color.fromARGB(255, 255, 255, 255),
