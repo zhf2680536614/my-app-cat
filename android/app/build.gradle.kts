@@ -30,12 +30,23 @@ android {
         versionName = flutter.versionName
     }
 
+    // 配置签名
+    signingConfigs {
+        create("release") {
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+            storeFile = file("${System.getProperty("user.home")}\\.android\\debug.keystore")
+            storePassword = "android"
+        }
+    }
+    
     buildTypes {
         debug {
             // 使用默认签名
         }
         release {
-            // 移除签名配置，使用默认无签名构建
+            signingConfig = signingConfigs.getByName("release")
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
 }
