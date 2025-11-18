@@ -14,9 +14,24 @@ class _PersonState extends State<Person> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
+      body: GestureDetector(
+        // 点击空白区域收起键盘
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        // 确保GestureDetector能够接收到点击事件
+        behavior: HitTestBehavior.opaque,
+        child: SingleChildScrollView(
+          // 键盘可以通过拖拽手势收起
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          // 确保内容在小屏幕上也能完全显示
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+          // 内容垂直居中
+          child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          // 设置最小高度为屏幕高度减去padding，确保内容居中
+          mainAxisSize: MainAxisSize.min,
           children: [
             Lottie.asset(
               'animations/loading_single.json',
@@ -40,7 +55,7 @@ class _PersonState extends State<Person> {
                 ),
               ),
             ),
-            SizedBox(height: 20.h,),
+            SizedBox(height: 20.h),
             SizedBox(
               width: 300.w,
               child: InputDecorator(
@@ -58,6 +73,7 @@ class _PersonState extends State<Person> {
           ],
         ),
       ),
+    ),
     );
   }
 }
